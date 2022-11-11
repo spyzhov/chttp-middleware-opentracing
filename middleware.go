@@ -7,10 +7,13 @@ import (
 	"github.com/opentracing/opentracing-go/log"
 )
 
-// Opentracing is a chttp.Middleware constructor to add opentracing to the request.
-func Opentracing(getName func(*http.Request) string) func(request *http.Request, next func(*http.Request) (*http.Response, error)) (*http.Response, error) {
+// OpentracingCustom is a chttp.Middleware constructor to add opentracing to the request.
+func OpentracingCustom(getName func(*http.Request) string) func(request *http.Request, next func(*http.Request) (*http.Response, error)) (*http.Response, error) {
+	if getName == nil {
+		getName = defaultNameGetter
+	}
 	return func(request *http.Request, next func(request *http.Request) (*http.Response, error)) (response *http.Response, err error) {
-		if opentracing.IsGlobalTracerRegistered() && getName != nil {
+		if opentracing.IsGlobalTracerRegistered() {
 			span, ctx := opentracing.StartSpanFromContext(request.Context(), getName(request))
 			request = request.WithContext(ctx)
 

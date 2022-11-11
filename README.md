@@ -1,7 +1,5 @@
 # OpenTracing middleware for the cHTTP client
 
-
-
 Adds an OpenTracing logs and headers to the request.
 
 ### Usage example
@@ -11,7 +9,6 @@ package clients
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/spyzhov/chttp"
 	middleware "github.com/spyzhov/chttp-middleware-opentracing"
@@ -23,9 +20,7 @@ type Client struct {
 
 func New() *Client {
 	client := chttp.NewJSON(nil)
-	client.With(middleware.Opentracing(func(request *http.Request) string {
-		return request.URL.Path
-	}))
+	client.With(middleware.Opentracing())
 
 	return &Client{
 		Client: client,
